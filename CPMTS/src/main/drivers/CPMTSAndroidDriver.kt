@@ -6,11 +6,14 @@ import io.appium.java_client.MobileBy
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.nativekey.AndroidKey
 import io.appium.java_client.android.nativekey.KeyEvent
+import io.appium.java_client.android.nativekey.KeyEventFlag
 import main.Const
 import main.Logger
+import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 
 class CPMTSAndroidDriver(override val driver: AndroidDriver<WebElement>, override val locale: String, override val orientation: String) : CPMTSDriver {
+
     private val startTime: Long
 
     override val deviceName: String
@@ -44,6 +47,11 @@ class CPMTSAndroidDriver(override val driver: AndroidDriver<WebElement>, overrid
         Logger.log("clickOnElement - $elementID", Logger.OPERATION_LEVEL.TRIVIAL)
     }
 
+    override fun clickOnElementWithText(elementText:String) {
+        this.driver.findElementByAndroidUIAutomator("new UiSelector().text(\"$elementText\")").click()
+        Logger.log("clickOnElementWithText - $elementText", Logger.OPERATION_LEVEL.TRIVIAL)
+    }
+
     override fun clickOnElement(elementID: String, alternativeID: String) {
         //NOTE: I know its ugly, but well... Appium.
         try {
@@ -74,6 +82,11 @@ class CPMTSAndroidDriver(override val driver: AndroidDriver<WebElement>, overrid
     override fun goBack() {
         driver.pressKey(KeyEvent(AndroidKey.BACK))
         Logger.log("goBack", Logger.OPERATION_LEVEL.TRIVIAL)
+    }
+
+    override fun pressOnMenu() {
+        driver.pressKey(KeyEvent(AndroidKey.MENU))
+        Logger.log("pressOnMenu", Logger.OPERATION_LEVEL.TRIVIAL)
     }
 
     override fun goBackFromModalWindow() {

@@ -73,6 +73,13 @@ interface CPMTSDriver {
     fun clickOnElement(elementID: String, alternativeID: String)
 
     /**
+     * @param elementText text to find element with
+     * and then to click on to
+     * NOTE! Not implemented for iOS!
+     */
+    fun clickOnElementWithText(elementText:String)
+
+    /**
      * @param text ID of the element to click to
      * For Android its +@id/ value
      * For iOS its accessibilityLabel value
@@ -95,6 +102,12 @@ interface CPMTSDriver {
      * for Android its the same as press a back button
      */
     fun goBack()
+
+    /**
+     * For Android its sends AndroidKey.MENU
+     * For iOS it does nothing
+     */
+    fun pressOnMenu()
 
     /**
      * That method is more relevant to iOS, because there are times

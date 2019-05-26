@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement
 import java.util.HashMap
 
 class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val locale: String, override val orientation: String) : CPMTSDriver {
+
     private val startTime: Long
 
     override val deviceName: String
@@ -45,6 +46,10 @@ class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val lo
         Logger.log("clickOnElement - $elementID", Logger.OPERATION_LEVEL.TRIVIAL)
     }
 
+    override fun clickOnElementWithText(elementText: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun clickOnElement(elementID: String, alternativeID: String) {
         //NOTE: I know its ugly, but well... Appium.
         try {
@@ -55,7 +60,6 @@ class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val lo
             driver.findElementByAccessibilityId(alternativeID).click()
             Logger.log("clickOnElement - $alternativeID", Logger.OPERATION_LEVEL.TRIVIAL)
         }
-
     }
 
     override fun scrollToElementWithText(text: String) {
@@ -75,6 +79,10 @@ class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val lo
     override fun goBack() {
         driver.navigate().back()
         Logger.log("goBack", Logger.OPERATION_LEVEL.TRIVIAL)
+    }
+
+    override fun pressOnMenu() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun goBackFromModalWindow() {
