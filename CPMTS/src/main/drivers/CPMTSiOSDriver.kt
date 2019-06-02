@@ -11,7 +11,9 @@ import main.Logger
 import org.openqa.selenium.WebElement
 import java.util.HashMap
 
-class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val locale: String, override val orientation: String) : CPMTSDriver {
+class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>,
+                     override val locale: String,
+                     override val orientation: String) : CPMTSDriver, CPMTSBaseDriver() {
 
     private val startTime: Long
 
@@ -37,13 +39,13 @@ class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val lo
     }
 
     override fun setTextToElement(elementID: String, text: String) {
-        this.driver.findElementByAccessibilityId(elementID).sendKeys(text)
         Logger.log("setTextToElement - $elementID text - $text", Logger.OPERATION_LEVEL.TRIVIAL)
+        performAction { this.driver.findElementByAccessibilityId(elementID).sendKeys(text) }
     }
 
     override fun clickOnElement(elementID: String) {
-        this.driver.findElementByAccessibilityId(elementID).click()
         Logger.log("clickOnElement - $elementID", Logger.OPERATION_LEVEL.TRIVIAL)
+        performAction { this.driver.findElementByAccessibilityId(elementID).click() }
     }
 
     override fun clickOnElementWithText(elementText: String) {
@@ -51,24 +53,22 @@ class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val lo
     }
 
     override fun clickOnElement(elementID: String, alternativeID: String) {
-        //NOTE: I know its ugly, but well... Appium.
-        try {
-            Logger.log("clickOnElement - $elementID", Logger.OPERATION_LEVEL.TRIVIAL)
-            driver.findElementByAccessibilityId(elementID).click()
-        } catch (ex: Exception) {
-            Logger.log("element - $elementID not found", Logger.OPERATION_LEVEL.TRIVIAL)
-            driver.findElementByAccessibilityId(alternativeID).click()
-            Logger.log("clickOnElement - $alternativeID", Logger.OPERATION_LEVEL.TRIVIAL)
-        }
+        Logger.log("clickOnElement - $elementID", Logger.OPERATION_LEVEL.TRIVIAL)
+        performAction { driver.findElementByAccessibilityId(elementID).click() }
+        Logger.log("element - $elementID not found", Logger.OPERATION_LEVEL.TRIVIAL)
+        performAction { driver.findElementByAccessibilityId(alternativeID).click() }
+        Logger.log("clickOnElement - $alternativeID", Logger.OPERATION_LEVEL.TRIVIAL)
     }
 
     override fun scrollToElementWithText(text: String) {
-        val js = driver
-        val scrollObject = HashMap<String, String>()
-        scrollObject["direction"] = "down"
-        scrollObject["name"] = text
-        js.executeScript("mobile: scroll", scrollObject)
         Logger.log("scrollToElementWithText - $text", Logger.OPERATION_LEVEL.TRIVIAL)
+        performAction {
+            val js = driver
+            val scrollObject = HashMap<String, String>()
+            scrollObject["direction"] = "down"
+            scrollObject["name"] = text
+            js.executeScript("mobile: scroll", scrollObject)
+        }
     }
 
     override fun scrollToElementWithID(elementID: String) {
@@ -77,8 +77,8 @@ class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val lo
     }
 
     override fun goBack() {
-        driver.navigate().back()
         Logger.log("goBack", Logger.OPERATION_LEVEL.TRIVIAL)
+        performAction { driver.navigate().back() }
     }
 
     override fun pressOnMenu() {
@@ -86,35 +86,40 @@ class CPMTSiOSDriver(override val driver: IOSDriver<WebElement>, override val lo
     }
 
     override fun goBackFromModalWindow() {
-        var pointOption = PointOption.point(20,20)
-        if (orientation == "LANDSCAPE") {
-            pointOption = PointOption.point(10,10)
-        }
-
-        PlatformTouchAction(driver)
-            .press(pointOption)
-            .waitAction()
-            .release()
-            .perform()
-
         Logger.log("goBackFromModalWindow", Logger.OPERATION_LEVEL.TRIVIAL)
+
+        performAction {
+            var pointOption = PointOption.point(20,20)
+            if (orientation == "LANDSCAPE") {
+                pointOption = PointOption.point(10,10)
+            }
+
+            PlatformTouchAction(driver)
+                .press(pointOption)
+                .waitAction()
+                .release()
+                .perform()
+        }
     }
 
     override fun scrollToBottom() {
-        val js = driver
-        val params = HashMap<String, Any>()
-        params["direction"] = "down"
-        js.executeScript("mobile: scroll", params)
         Logger.log("scrollToBottom", Logger.OPERATION_LEVEL.TRIVIAL)
-
+        performAction {
+            val js = driver
+            val params = HashMap<String, Any>()
+            params["direction"] = "down"
+            js.executeScript("mobile: scroll", params)
+        }
     }
 
     override fun scrollToTop() {
-        val js = driver
-        val params = HashMap<String, Any>()
-        params["direction"] = "up"
-        js.executeScript("mobile: scroll", params)
         Logger.log("scrollToTop", Logger.OPERATION_LEVEL.TRIVIAL)
+        performAction {
+            val js = driver
+            val params = HashMap<String, Any>()
+            params["direction"] = "up"
+            js.executeScript("mobile: scroll", params)
+        }
     }
 
     override fun quit() {

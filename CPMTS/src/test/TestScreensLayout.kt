@@ -18,9 +18,9 @@ class TestScreensLayout {
                 for (orientation in Const.SUPPORTED_ORIENTATIONS.values()) { // for every orientation
 
                     val driver = DriversFactory.getDriver(device, lang, orientation)
-                    Thread.sleep(5000)
-                    Helpers.takeScreenshot(driver, testName, "main-screen")
-
+                    Helpers.takeScreenshot(driver, testName, "screen-main")
+                    driver.clickOnElement("imageViewSettings");
+                    Helpers.takeScreenshot(driver, testName, "screen-settings")
                     driver.quit()
                 }
             }

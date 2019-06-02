@@ -137,4 +137,11 @@ interface CPMTSDriver {
      */
 
     fun quit()
+
+    /**
+     * Time to wait between each operation
+     * Default - 3000
+     * Most common use-case -> wait for elements to appear on the screen
+     */
+    var delay:Long
 }
